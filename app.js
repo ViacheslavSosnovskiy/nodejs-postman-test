@@ -2,14 +2,16 @@ const express = require("express")
 const fs = require("fs/promises")
 const moment = require("moment")
 const cors = require("cors")
-const app = express()
-const contactsRouter = require("./routes/api/contacts")
+require("dotenv").config()
 
-// awq2mhIWlCu4DZHF 
+const app = express()
+
+const router = require("./routes/api/contacts")
 
 app.use(cors())
+app.use(express.json())
 
-app.use("/api/contacts", contactsRouter)
+app.use("/api/contacts", router)
 
 app.use( async (req, res, next) => {
     const {method, url} = req
@@ -29,4 +31,4 @@ app.use((err, req, res, next) => {
     res.status(status).json({ message })
 })
 
-app.listen(3001, "Server started on 3001 port")
+module.exports = app

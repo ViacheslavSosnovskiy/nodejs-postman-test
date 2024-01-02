@@ -1,16 +1,15 @@
-const contacts = require("../contacts/index")
-const { HttpError } = require("../helpers")
-const { ctrlWrapper } = require("../helpers/ctrlWrapper")
-const schema = require("../schemas/contactsSchema")
+const {Contact} = require("../models/contact")
+const { HttpError, ctrlWrapper } = require("../helpers")
 
 const getAll = async (req, res) => {
-    const result = await contacts.getAll()
+    const result = await Contact.find({}, "-createdAt -updatedAt")
     res.json(result)
 }
 
 const getContactById = async (req, res, next) => {
         const {id} = req.params
-        const result = await contacts.getById(id)
+        const result = await Contact.findOne({_id: id})
+        // const result = await Contact.findById(id)
         if(!result) {
             throw HttpError(404, "Not found")
         }
@@ -18,18 +17,13 @@ const getContactById = async (req, res, next) => {
 }
 
 const addContact = async (req, res, next) => {
-        const {error} = schema.addSchema.validate(req.body)
-        if(error) {
-            throw HttpError(400, error.message)
-        }
-
-        const result = await contacts.addContact(req.body)
+        const result = await Contact.create(req.body)
         res.status(201).json(result)
 }
 
 const deleteContactById = async (req, res, next) => {
         const {id} = req.params
-        const result = await contacts.deleteById(id)
+        const result = await Сontact.findByIdAndRemove(id)
         if(!result) {
             throw HttpError(404, "Not found")
         }
@@ -39,16 +33,24 @@ const deleteContactById = async (req, res, next) => {
 }
 
 const updateContact = async (req, res, next) => {
-        const {error} = schema.addSchema.validate(req.body)
-        if(error) {
-            throw HttpError(400, error.message)
-        }
         const {id} = req.params
-        const result = await contacts.updateById(id, req.body)
+        // {new: true} --- it's shows us updated contact in postman
+        const result = await Contact.findByIdAndUpdate(id, req.body, {new: true})
         if(!result) {
             throw HttpError(400, error.message)
         }
-        res.json(result)
+        res.json({
+            message: "You successfull deleted"
+        })
+}
+// это метод patch - обовляет в объекте только одно поле
+const updateFavorite = async (req, res) => {
+    const {id} = req.params
+    const result = await Contact.findByIdAndUpdate(id, req.body, {new: true})
+    if(!result) {
+        throw HttpError(404, "Not found")
+    }
+    res.json(result)
 }
 
 module.exports = {
@@ -57,6 +59,7 @@ module.exports = {
     addContact: ctrlWrapper(addContact),
     deleteContactById: ctrlWrapper(deleteContactById),
     updateContact: ctrlWrapper(updateContact),
+    // updateFavorite: ctrlWrapper(updateFavorite),
 }
 
 
