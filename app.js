@@ -6,12 +6,14 @@ require("dotenv").config()
 
 const app = express()
 
-const router = require("./routes/api/contacts")
+const contactRouter = require("./routes/api/contacts")
+const authRouter = require("./routes/api/auth")
 
 app.use(cors())
 app.use(express.json())
 
-app.use("/api/contacts", router)
+app.use("/api/contacts", contactRouter)
+app.use("/api/auth", authRouter)
 
 app.use( async (req, res, next) => {
     const {method, url} = req
