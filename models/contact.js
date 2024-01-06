@@ -19,6 +19,11 @@ const contactSchema = new Schema({
         type: String,
         required: true,
     },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+        required: true,
+    },
     // genre: {
     //     type: String,
     //     required: true,
@@ -36,7 +41,7 @@ contactSchema.post("save", handleMongooseError)
 const addSchema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required(),
-    phone: Joi.number().required(),
+    phone: Joi.string().required(),
     // favorite: Joi.string().valid(...validateList).required(),
     // data: Joi.string().pattern(dataRegexp).required()
 })
