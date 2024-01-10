@@ -47,15 +47,6 @@ const updateContact = async (req, res, next) => {
             message: "You successfull deleted"
         })
 }
-// это метод patch - обовляет в объекте только одно поле
-const updateFavorite = async (req, res) => {
-    const {id} = req.params
-    const result = await Contact.findByIdAndUpdate(id, req.body, {new: true})
-    if(!result) {
-        throw HttpError(404, "Not found")
-    }
-    res.json(result)
-}
 
 module.exports = {
     getAll: ctrlWrapper(getAll),
@@ -63,5 +54,4 @@ module.exports = {
     addContact: ctrlWrapper(addContact),
     deleteContactById: ctrlWrapper(deleteContactById),
     updateContact: ctrlWrapper(updateContact),
-    // updateFavorite: ctrlWrapper(updateFavorite),
 }

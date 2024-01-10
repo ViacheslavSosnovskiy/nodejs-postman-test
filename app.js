@@ -11,6 +11,10 @@ const authRouter = require("./routes/api/auth")
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static("public"))
+
+app.use("/api/contacts", contactRouter)
+app.use("/api/auth", authRouter)
 
 app.use( async (req, res, next) => {
     const {method, url} = req
@@ -18,9 +22,6 @@ app.use( async (req, res, next) => {
     await fs.appendFile("./public/server.log", `\n${method} ${url} ${date}`)
     next()
 })
-
-app.use("/api/contacts", contactRouter)
-app.use("/api/auth", authRouter)
 
 app.use((req, res) => {
     res.status(404).json({

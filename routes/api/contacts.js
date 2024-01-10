@@ -1,5 +1,6 @@
 const express = require("express")
-const controllers = require("../../controllers/contacts")
+
+const controllers = require("../../controllers/contactsCtrl")
 const {schema} = require("../../models/contact")
 const {validateBody} = require("../../middlewares")
 const {isValidId} = require("../../middlewares")
